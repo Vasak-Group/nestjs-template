@@ -20,6 +20,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
 
   app.register(compression, { encodings: ['gzip', 'deflate'] });
+  app.enableCors();
 
   SwaggerModule.setup('docs', app, document);
   await app.listen(3000, '0.0.0.0');
