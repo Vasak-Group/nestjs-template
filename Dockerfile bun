@@ -1,0 +1,29 @@
+FROM oven/bun:latest as builder
+
+# Create app directory
+WORKDIR /app
+
+# Install app dependencies
+COPY package.json bun.lockb ./
+
+RUN bun install
+
+COPY . .
+
+RUN bun run build:bun
+
+FROM oven/bun:lts-alpine
+
+ENV NODE_ENV production
+
+# Create app directory
+WORKDIR /app
+
+# Install app dependencies
+COPY package.json bun.lockb ./
+
+RUN bun install --production --frozen-lockfile
+
+COPY --from=builder /app/dist ./dist
+
+CMD [ "bun", "dist/main.js" ]
