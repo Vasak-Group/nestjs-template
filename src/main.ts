@@ -6,6 +6,7 @@ import {
 import compression from '@fastify/compress';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -20,6 +21,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
 
   app.register(compression, { encodings: ['gzip', 'deflate'] });
+  app.useGlobalPipes(new ValidationPipe());
   app.enableCors();
 
   SwaggerModule.setup('docs', app, document);
