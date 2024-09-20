@@ -23,6 +23,14 @@ async function bootstrap() {
   app.register(compression, { encodings: ['gzip', 'deflate'] });
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.enableCors();
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+    }),
+  );
 
   SwaggerModule.setup('docs', app, document);
   await app.listen(3000, '0.0.0.0');
