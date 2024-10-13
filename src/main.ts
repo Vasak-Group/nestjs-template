@@ -7,6 +7,7 @@ import compression from '@fastify/compress';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -19,6 +20,7 @@ async function bootstrap() {
     .setVersion('0.0.1')
     .build();
   const document = SwaggerModule.createDocument(app, config);
+  const configService = app.get<ConfigService>(ConfigService);
 
   app.register(compression, { encodings: ['gzip', 'deflate'] });
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
@@ -33,6 +35,6 @@ async function bootstrap() {
   );
 
   SwaggerModule.setup('docs', app, document);
-  await app.listen(3000, '0.0.0.0');
+  await app.listen(configService.get('port'), '0.0.0.0');
 }
 bootstrap();
