@@ -78,3 +78,14 @@ yarn run test:e2e
 yarn run test:cov
 ```
 
+## Path alias
+
+Este proyecto configura un alias de TypeScript `@` apuntando a la carpeta `src/`.
+Puedes importar módulos del proyecto usando `@/ruta/al/archivo` en lugar de rutas relativas largas.
+
+Ejemplo:
+
+```ts
+import { AppModule } from '@/app.module';
+```
+
