@@ -1,30 +1,29 @@
-FROM node:lts as builder
+FROM oven/bun:latest as builder
 
 # Create app directory
 WORKDIR /app
 
 # Install app dependencies
-COPY package.json yarn.lock ./
+COPY package.json bun.lock ./
 
-RUN yarn install --frozen-lockfile
+RUN bun install
 
 COPY . .
 
-RUN yarn build
+RUN bun run build:bun
 
-FROM node:lts-alpine
+FROM oven/bun:lts-alpine
 
 ENV NODE_ENV production
-USER node
 
 # Create app directory
 WORKDIR /app
 
 # Install app dependencies
-COPY package.json yarn.lock ./
+COPY package.json bun.lock ./
 
-RUN yarn install --production --frozen-lockfile
+RUN bun install --production --frozen-lockfile
 
 COPY --from=builder /app/dist ./dist
 
-CMD [ "node", "dist/main.js" ]
+CMD [ "bun", "dist/main.js" ]
